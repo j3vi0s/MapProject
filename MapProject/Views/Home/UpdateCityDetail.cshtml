@@ -1,0 +1,69 @@
+﻿@model List<City>
+@{
+    ViewData["Title"] = "UpdateCityDetail";
+}
+
+<form>
+    <div class="form-group">
+        <select name="id" class="form-select" aria-label="Şehir Seçimi" onchange="changeCity()">
+            @foreach (var citySelect in Model)
+            {
+                <option value="@citySelect.Id">@citySelect.Name</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Ürün Sayısı</label>
+        <input type="number" name="productCount" class="form-control" id="productCount">
+    </div>
+    <div class="form-group">
+        <label>Coğrafi İşaretli Ürün Sayısı</label>
+        <input type="number" name="geographicalProduct" class="form-control" id="geographicalProduct">
+    </div>
+    <div class="form-group">
+        <label>Yüz Yıllık Marka Ürün Sayısı</label>
+        <input type="number" name="centuryBrandProduct" class="form-control" id="centuryBrandProduct">
+    </div>
+
+
+    <button type="button" onclick="saveCityDetail()" class="btn btn-primary">Kayıt Et</button>
+</form>
+
+@section Scripts{
+    <script>
+        function changeCity() {
+         
+
+            var selectedValue = $('select[name=id] option').filter(':selected').val();
+            $.ajax({
+                'url': '/home/getCityDetailsById/' + selectedValue,
+                'type': 'GET',
+                'success': function (data) {
+                   
+                    $("#productCount").val(data.productCount);
+                    $("#geographicalProduct").val(data.geographicalProduct);
+                    $("#centuryBrandProduct").val(data.centuryBrandProduct);
+                },
+                'error': function (request, error) {
+                }
+            })
+        }
+        function saveCityDetail() {
+            $.ajax({
+                'url': '/home/saveCityDetail',
+                'type': 'POST',
+                'data': $("form").serialize(),
+                'success': function (data) {
+                    alert("ÜRÜN SAYILARI GÜNCELLENDİ AMINA KOYİM");
+
+                  
+                },
+                'error': function (request, error) {
+                }
+            })
+           
+        }
+
+          
+    </script>
+}
